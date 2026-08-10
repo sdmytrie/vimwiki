@@ -2,4 +2,5 @@
 
 ## Index
 
-First [Misc](/misc/test)
+* First [Misc](/misc/test)
+* [DevOps](/devops/index)
