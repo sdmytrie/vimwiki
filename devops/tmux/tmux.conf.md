@@ -1,0 +1,125 @@
+# tmux.conf
+
+
+```
+unbind C-b
+set -g prefix C-x
+bind-key C-x send-prefix
+
+display-message "Hello FFHM"
+
+bind '"' split-window -v -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+
+set -g default-terminal "tmux-256color"
+set -ag terminal-overrides ",xterm-256color:RGB"
+
+unbind r
+bind r source-file ~/.tmux.conf
+
+# set -g default-terminal "tmux-256color"
+# set -sg terminal-overrides ",xterm-256color:RGB"
+
+# set -g prefix C-s
+
+set -g escape-time 0
+set -g mouse on
+set -g renumber-windows on
+set -g repeat-time 1000
+
+# # Start windows and panes at 1, not 0
+set -g base-index 1
+set -g pane-base-index 1
+set-window-option -g pane-base-index 1
+set -g detach-on-destroy off
+
+bind-key h select-pane -L
+bind-key j select-pane -D
+bind-key k select-pane -U
+bind-key l select-pane -R
+
+set-option -g status-position top
+
+# set -g @catppuccin_window_status_style "rounded"
+
+# List of plugins
+set -g @plugin 'tmux-plugins/tpm'
+# set -g @plugin 'catppuccin/tmux'
+set -g @plugin 'christoomey/vim-tmux-navigator'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+# set -g @continuum-restore 'on'
+
+# set -g status-left ""
+# set -g status-right "#{E:@catppuccin_status_application} #{E:@catppuccin_status_session}"
+# Other examples:
+# set -g @plugin 'github_username/plugin_name'
+# set -g @plugin 'github_username/plugin_name#branch'
+# set -g @plugin 'git@github.com:user/plugin'
+# set -g @plugin 'git@bitbucket.com:user/plugin'
+
+# Initialize TMUX plugin manager (keep this line at the very bottom of tmux.conf)
+run '~/.tmux/plugins/tpm/tpm'
+
+set -g status-style bg=default
+set-window-option -g mode-keys vi
+
+# Implement pane resizing with alt array keys
+unbind Up
+unbind Down
+unbind Left
+unbind Right
+bind w resize-pane -x 80% 
+bind = resize-pane -x 50% 
+bind -r Up resize-pane -U 5
+bind -r Down resize-pane -D 5
+bind -r Left resize-pane -L 5
+bind -r Right resize-pane -R 5
+
+bind S display-popup -h 80% -w 80% -E "tmux new-session -A -s scratch" 
+
+
+bind C-y display-popup \
+  -d "#{pane_current_path}" \
+  -w 80% \
+  -h 80% \
+  -E "lazygit"
+
+bind C-z display-popup \
+  -d "#{pane_current_path}" \
+  -w 80% \
+  -h 80% \
+  -E "zsh"
+
+bind C-n display-popup -E 'bash -i -c "read -p \"Session name: \" name; tmux new-session -d -s \$name && tmux switch-client -t \$name"'
+bind C-j display-popup -E "tmux list-sessions | sed -E 's/:.*$//' | grep -v \"^$(tmux display-message -p '#S')\$\" | fzf --reverse | xargs tmux switch-client -t"
+# bind C-r display-popup \
+#   -d "#{pane_current_path}" \
+#   -w 90% \
+#   -h 90% \
+#   -E "yazi"
+
+# bind d display-menu -T "#[align=centre]Dotfiles" -x C -y C \
+#   ".zshrc"            z  "display-popup -E 'nvim ~/.zshrc'" \
+#   ".tmux.conf"        t  "display-popup -E 'nvim ~/.tmux.conf'" \
+#   "Exit"              q  ""
+ 
+ # Style
+gray_light="#D8DEE9"
+gray_medium="#ABB2BF"
+gray_dark="#3B4252"
+green_soft="#A3BE8C"
+blue_muted="#81A1C1"
+cyan_soft="#88C0D0"
+set -g status-right-length 100
+set -g status-style "fg=${gray_light}, bg=default"
+set -g status-right "#[fg=${green_soft}, bold] #S #{fg=${gray_light}, nobold] | "
+set -g status-left ""
+set -g window-status-current-format "#[fg=${cyan_soft}, bold]  #[underscore]#I:#W"
+set -g window-status-format " #I:#W"
+set -g message-style "fg=${gray_light}, bg=default"
+set -g mode-style "fg=${gray_dark}, bg=${blue_muted}"
+set -g pane-border-style "fg=${gray_dark}"
+set -g pane-active-border-style "fg=${gray_medium}"
+# set -g status-justify centre
+```
